@@ -1,43 +1,41 @@
 #include <iostream>
-#include <forward_list>
+
+class Fruit
+{
+public:
+	// FruitType has been moved inside the class, under the public access specifier
+	// We've also renamed it Type and made it an enum rather than an enum class
+	enum Type
+	{
+		apple,
+		banana,
+		cherry
+	};
+
+private:
+	Type m_type{};
+	int m_percentageEaten{0};
+
+public:
+	Fruit(Type type) : m_type{type}
+	{
+	}
+
+	Type getType() { return m_type; }
+	int getPercentageEaten() { return m_percentageEaten; }
+
+	bool isCherry() { return m_type == cherry; } // Inside members of Fruit, we no longer need to prefix enumerators with FruitType::
+};
 
 int main()
 {
-	std::forward_list<int> nums{4, 3, 2, 1, 0};
+	// Note: Outside the class, we access the enumerators via the Fruit:: prefix now
+	Fruit apple{Fruit::apple};
 
-	// initialise iterators
-	auto prevItr{nums.before_begin()}; // [] 4 3 2 1 0
-	auto itr{nums.begin()};			   //   [4] 3 2 1 0
-
-#if 0
-	// after this function call
-	// the iterator(s) referring
-	// to the deleted iterator will be
-	// left dangling
-	nums.erase_after(prevItr); // 3 2 1 0
-
-	// dereferencing a dangling iterator
-	// will produce undefined behaviour
-	// std::cout << *itr << '\n';
-#endif
-
-	// to avoid dereferencing a dangling
-	// iterator. We need to update those iterator(s)
-	// who are still referring to that deleted iterator
-
-	// NOTE: we have'nt updated 'itr' after deleting
-	// the element which it was referring
-
-	// we can do that by simply assign the
-	// the following iterator of the erased
-	// iterator.
-	// erase_after() returns the following
-	// iterator of the erased iterator OR
-	// it will return .end()
-
-	itr = nums.erase_after(prevItr); // [3] 2 1 0
-
-	std::cout << *itr << '\n';
+	if (apple.getType() == Fruit::apple)
+		std::cout << "I am an apple";
+	else
+		std::cout << "I am not an apple";
 
 	return 0;
 }
