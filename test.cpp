@@ -1,41 +1,38 @@
+#include <chrono>
+#include <random>
 #include <iostream>
 
-class Fruit
+class Random
 {
 public:
-	// FruitType has been moved inside the class, under the public access specifier
-	// We've also renamed it Type and made it an enum rather than an enum class
-	enum Type
+	static std::mt19937 generate()
 	{
-		apple,
-		banana,
-		cherry
-	};
+		std::random_device rd{};
 
-private:
-	Type m_type{};
-	int m_percentageEaten{0};
+		// Create seed_seq with high-res clock and 7 random numbers from std::random_device
+		std::seed_seq ss{
+			static_cast<std::seed_seq::result_type>(std::chrono::steady_clock::now().time_since_epoch().count()),
+			rd(), rd(), rd(), rd(), rd(), rd(), rd()};
 
-public:
-	Fruit(Type type) : m_type{type}
-	{
+		return std::mt19937{ss};
 	}
 
-	Type getType() { return m_type; }
-	int getPercentageEaten() { return m_percentageEaten; }
+	static inline std::mt19937 mt{generate()}; // generates a seeded std::mt19937 and copies it into our global object
 
-	bool isCherry() { return m_type == cherry; } // Inside members of Fruit, we no longer need to prefix enumerators with FruitType::
+	// Generate a random int between [min, max] (inclusive)
+	static int get(int min, int max)
+	{
+		return std::uniform_int_distribution{min, max}(mt);
+	}
 };
 
 int main()
 {
-	// Note: Outside the class, we access the enumerators via the Fruit:: prefix now
-	Fruit apple{Fruit::apple};
+	// Print a bunch of random numbers
+	for (int count{1}; count <= 10; ++count)
+		std::cout << Random::get(1, 6) << '\t';
 
-	if (apple.getType() == Fruit::apple)
-		std::cout << "I am an apple";
-	else
-		std::cout << "I am not an apple";
+	std::cout << '\n';
 
 	return 0;
 }

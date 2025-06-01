@@ -30,6 +30,7 @@
                 // "-DNDEBUG",
                 // Disable compilier extensions
                 "-pedantic-errors",
+                "-I${HOME}/Documents/HOME/cpp-practice-projects/myLibs/utilities",
                 // The ${file} variable expands to the current file name.
                 "${file}",
                 // Specify the output file. The output will be placed in the same directory with the same base name.

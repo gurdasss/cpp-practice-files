@@ -3,7 +3,8 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${HOME}/Documents/HOME/cpp-practice-projects/myLibs/utilities"
             ],
             "defines": [],
             "cStandard": "c17",
